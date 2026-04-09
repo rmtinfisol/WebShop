@@ -1,21 +1,25 @@
 import {test,expect} from '@playwright/test';
+import { UserRegistration } from '../Pages/userRegistration';
+import { Addresses } from '../Pages/addresses'; 
+import { AccountInfo } from '../Pages/accountInfo';
+import { Login } from '../Pages/login';
+
 
 test.describe('User Registration', () => {
 
   test('should register a new user successfully', async ({ page }) => {
-    await page.goto('https://demowebshop.tricentis.com/');
-    await page.click("a.ico-register");
 
-    await page.check('#gender-male');
-    await page.fill('#FirstName', 'John');
-    await page.fill('#LastName', 'Doe');
-    await page.fill('#Email', 'john.doe1e@example.com');
-    await page.fill('#Password', 'Password123');
-    await page.fill('#ConfirmPassword', 'Password123');
-    await page.click('input#register-button');
+    const userRegistration = new UserRegistration(page);
+
+    await page.goto('https://demowebshop.tricentis.com/');
+
+    await page.locator(userRegistration. registerlink).click();
 
     const pageTitle = await page.title();
     expect(pageTitle).toBe('Demo Web Shop. Register');
+    
+    await userRegistration.registerNewUser('John', 'Doe', 'john.doe1e@example.com', 'Password123');
+
 
     const successMessage = await page.locator('.result').textContent();
     expect(successMessage).toContain('Your registration completed');
@@ -25,36 +29,33 @@ test.describe('User Registration', () => {
   });
 
   test.only('Login and Add an address to a newly created user', async ({ page }) => {
-    await page.goto('https://demowebshop.tricentis.com/');
-    await page.click("a.ico-login");
-    await page.fill('#Email', 'john.doe1e@example.com');
-    await page.fill('#Password', 'Password123');
-    await page.click('input.login-button');
 
-    expect(page.locator('.header-links a.account')).toHaveText('john.doe1e@example.com');
-    await page.click('.header-links a.account');
+    const addresses = new Addresses(page);
+    const accountInfo = new AccountInfo(page);
+    const login = new Login(page);
+    
+    await page.goto('https://demowebshop.tricentis.com/');
+
+    await login.loginUser('john.doe1e@example.com', 'Password123');
+
+   
+    expect(page.locator(addresses.useAccountinfo)).toHaveText('john.doe1e@example.com');
+    await page.click(addresses.useAccountinfo);
 
     expect( await page.title()).toBe('Demo Web Shop. Account');
-    expect(await page.locator('.page-title')).toHaveText('My account - Customer info');
+    expect(await page.locator(accountInfo.pageTitle)).toHaveText('My account - Customer info');
 
-    await page.click("li a[href='/customer/addresses'][class='inactive']");
+    await page.click(addresses.leftMenuAddressLink);
 
     await page.getByRole('button', { name: 'Add new' }).click();
 
-    expect(await page.locator('.page-title > h1').textContent()).toContain('Add new address');    
+    expect(await page.locator(addresses.myAccountPageHeadingInfo).textContent()).toContain('Add new address');    
 
-    await page.fill('#Address_FirstName', 'John');
-    await page.fill('#Address_LastName', 'Doe');
-    await page.fill('#Address_Email', 'john.doe1e@example.com');
-    await page.fill('#Address_Company', 'Example Inc.');
-    await page.selectOption('select#Address_CountryId', 'Austria');
-    await page.locator('#Address_City').fill('Vienna');
-    await page.locator('#Address_Address1').fill('Vienna Street 1');
-    await page.locator("input[name='Address.ZipPostalCode']").fill('1234');
-    await page.locator('#Address_PhoneNumber').fill('00 11 22 33 44 55');
-    await page.getByRole('button', { name: 'Save' }).click();
+    await addresses.addNewAddress(addresses.addressData);
 
    
+
+     
     expect(await page.locator('.page-title > h1').textContent()).toContain('My account - Addresses');    
 
 
