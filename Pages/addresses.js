@@ -3,8 +3,9 @@ export class Addresses {
   constructor (page) {
     this.page = page;
     this.leftMenuAddressLink = "li a[href='/customer/addresses'][class='inactive']";
-    this.useAccountinfo = '.header-links a.account';
+    this.userAccountinfo = '.header-links a.account';
     this.myAccountPageHeadingInfo = '.page-title > h1';
+    this.addNewAddressButton = 'input.add-address-button';
     this.firstName = '#Address_FirstName';
     this.lastName = '#Address_LastName';
     this.email = '#Address_Email';
@@ -41,7 +42,7 @@ export class Addresses {
     await this.page.locator(this.address1).fill(address1);
     await this.page.locator(this.zipPostalCode).fill(zipPostalCode);
     await this.page.locator(this.phoneNumber).fill(phoneNumber);
-    // await this.page.locator(this.saveButton).click();
+    await this.page.locator(this.saveButton).click();
   }
 
 }

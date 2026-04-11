@@ -9,9 +9,10 @@ export class Login {
   }
 
   async loginUser(email, password) {
-    await this.page.click(this.loginlink);
+    //await this.page.click(this.loginlink);
     await this.page.fill(this.emailInput, email);
     await this.page.fill(this.passwordInput, password);
     await this.page.click(this.loginButton);
+    console.log(`Logged in with email: ${email} and password: ${password}`);
   } 
 }
