@@ -6,6 +6,7 @@ export class Login {
     this.emailInput = '#Email';
     this.passwordInput = '#Password';
     this.loginButton = 'input.login-button';
+    this.loginErrorMessage = '//div[@class="message-error"]';
   }
 
   async loginUser(email, password) {

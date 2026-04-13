@@ -26,4 +26,24 @@ test.describe('Login Tests', (page) => {
 
     });
 
+    test('should not login with invalid credentials', async ({ page }) => {
+
+        const login = new Login(page);
+        const topLevelLinks = new TopLevelLinks(page);
+
+        await page.goto('https://demowebshop.tricentis.com/');
+        await topLevelLinks.clickLoginLink();
+
+        const username = 'Ttestuser@yahoo.com';
+        const password = 'WrongPassword123';
+
+        await login.loginUser(username, password);
+
+        // Verify that the error message is displayed
+
+        expect(page.locator(login.loginErrorMessage)).toContainText('Login was unsuccessful. Please correct the errors and try again. The credentials provided are incorrect');
+
+
+    });
+
 });

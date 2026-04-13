@@ -16,6 +16,8 @@ export class Addresses {
     this.zipPostalCode = "input[name='Address.ZipPostalCode']";
     this.phoneNumber = '#Address_PhoneNumber';
     this.saveButton = 'input[value="Save"]';
+    this.addressList = '.address-list .address-item';
+    this.editButton = 'input.edit-address-button';
   }
 
   addressData = {
@@ -31,8 +33,8 @@ export class Addresses {
 
   }
 
-  async addNewAddress(object) {
-    const { firstName, lastName, email, company, country, city, address1, zipPostalCode, phoneNumber } = object;
+  async addNewAddress(addressData) {
+    const { firstName, lastName, email, company, country, city, address1, zipPostalCode, phoneNumber } = addressData;
     await this.page.locator(this.firstName).fill(firstName);
     await this.page.locator(this.lastName).fill(lastName);
     await this.page.locator(this.email).fill(email);
@@ -43,6 +45,31 @@ export class Addresses {
     await this.page.locator(this.zipPostalCode).fill(zipPostalCode);
     await this.page.locator(this.phoneNumber).fill(phoneNumber);
     await this.page.locator(this.saveButton).click();
+    return addressData;
   }
+
+  async getFirstAddressAdded(addressentry) {
+    const { firstName, lastName, email, company, country, city, address1, zipPostalCode, phoneNumber } = addressentry;
+    const addressEntry = this.page.locator('.address-list .address-item').first();
+    return addressEntry;
+  }
+
+  async updateFirstAddressEntry(newAddressData) {
+    const { firstName, lastName, email, company, country, city, address1, zipPostalCode, phoneNumber } = newAddressData;
+    //await this.page.locator(this.addressList).first().locator(this.editButton).click();
+    await this.page.locator(this.firstName).fill(firstName);
+    await this.page.locator(this.lastName).fill(lastName);
+    await this.page.locator(this.email).fill(email);
+    await this.page.locator(this.company).fill(company);
+    await this.page.locator(this.country).selectOption(country);
+    await this.page.locator(this.city).fill(city);
+    await this.page.locator(this.address1).fill(address1);
+    await this.page.locator(this.zipPostalCode).fill(zipPostalCode);
+    await this.page.locator(this.phoneNumber).fill(phoneNumber);
+    await this.page.locator(this.saveButton).click();
+    return newAddressData;
+
+  }
+
 
 }
