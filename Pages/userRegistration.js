@@ -14,6 +14,7 @@ export class UserRegistration {
     this.registerButton = 'input#register-button';
     this.registrationSuccessMessage = '.result';
     this.continueButton = '//input[@value="Continue"]';
+    this.userMyAccountInfoHeading = '.page-title > h1';
 
   }
 

@@ -36,5 +36,39 @@ test.describe('User Registration', () => {
 
   });
 
+   test('Verify My account - Customer information page has correct user information after login', async ({ page }) => {
+
+        const login = new Login(page);
+        const userRegistration = new UserRegistration(page);
+        const topLevelLinks = new TopLevelLinks(page);
+
+        await page.goto('https://demowebshop.tricentis.com/');
+        await topLevelLinks.clickRegisterLink();
+
+        const newUserData = await userRegistration.registerNewUserwithRandomData();
+
+        await topLevelLinks.clickUserAccountInfo();
+        expect(await page.locator(userRegistration.userMyAccountInfoHeading).textContent()).toContain('My account - Customer info');  
+
+        // Verify that the user information on the My account - Customer information page is correct
+
+        if (newUserData.gender =='male') {
+          expect(await page.locator(userRegistration.genderMale).isChecked()).toBeTruthy();
+          
+        } else {
+          expect(await page.locator(userRegistration.genderFemale).isChecked()).toBeTruthy();
+        }
+        
+        expect(await page.locator(userRegistration.firstName).inputValue()).toBe(newUserData.firstName);
+        expect(await page.locator(userRegistration.lastName).inputValue()).toBe(newUserData.lastName);
+        expect(await page.locator(userRegistration.email).inputValue()).toBe(newUserData.email);
+
+
+
+
+
+    });
+
+
 });
 

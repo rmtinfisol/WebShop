@@ -26,6 +26,7 @@ test.describe('Login Tests', (page) => {
 
     });
 
+   
     test('should not login with invalid credentials', async ({ page }) => {
 
         const login = new Login(page);
@@ -46,4 +47,25 @@ test.describe('Login Tests', (page) => {
 
     });
 
+    test('Logout after successful login', async ({ page }) => {
+
+        const login = new Login(page);
+        const topLevelLinks = new TopLevelLinks(page);
+
+        await page.goto('https://demowebshop.tricentis.com/');
+        await topLevelLinks.clickLoginLink();
+
+        const username = 'qr1w0.hnqmj@example.com';
+        const password = 'Password123';
+
+        await login.loginUser(username, password);
+
+        // Click on the logout link
+        await topLevelLinks.clickLogOutLink();
+
+        // Verify that the user is logged out by checking that the login link is visible again
+        expect(await page.locator(login.loginlink)).toBeVisible();
+
+
+});
 });

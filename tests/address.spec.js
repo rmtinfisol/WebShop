@@ -13,7 +13,6 @@ test.describe('Address page tests', () => {
 
         const addresses = new Addresses(page);
         const accountInfo = new AccountInfo(page);
-        const login = new Login(page);
         const topLevelLinks = new TopLevelLinks(page);
         const userRegistration = new UserRegistration(page);
 
@@ -54,8 +53,7 @@ test.describe('Address page tests', () => {
         addresses.addressData.lastName = newUser.lastName;
         addresses.addressData.email = newUser.email;
 
-        await addresses.addNewAddress(addresses.addressData);
-
+        await addresses.enterNewOrUpdateExistingAddress(addresses.addressData);
 
 
         expect(await page.locator('.page-title > h1').textContent()).toContain('My account - Addresses');
@@ -74,11 +72,9 @@ test.describe('Address page tests', () => {
 
     });
 
-    test.only('Login and Edit an existing address', async ({ page }) => {
+    test('Login and Edit an existing address', async ({ page }) => {
 
         const addresses = new Addresses(page);
-        //const accountInfo = new AccountInfo(page);
-        //const login = new Login(page);
         const topLevelLinks = new TopLevelLinks(page);
         const userRegistration = new UserRegistration(page);
 
@@ -101,7 +97,7 @@ test.describe('Address page tests', () => {
 
         await page.locator(addresses.addNewAddressButton).click();
 
-        const firstAddressData = await addresses.addNewAddress(addresses.addressData);
+        const firstAddressData = await addresses.enterNewOrUpdateExistingAddress(addresses.addressData);
 
         //logging the first address entry for debugging purposes
         console.log('First address entry:', firstAddressData);
@@ -126,7 +122,7 @@ test.describe('Address page tests', () => {
         };
 
         
-        await addresses.updateFirstAddressEntry(updatedAddressData);
+        await addresses.enterNewOrUpdateExistingAddress(updatedAddressData);
         //Verify that the address entry is updated with the new details
 
         const updatedFirstAddress = await addresses.getFirstAddressAdded(updatedAddressData);

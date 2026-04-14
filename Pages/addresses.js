@@ -33,7 +33,9 @@ export class Addresses {
 
   }
 
-  async addNewAddress(addressData) {
+  // Method to add a new address or update an existing address using the provided address data
+
+  async enterNewOrUpdateExistingAddress(addressData) {
     const { firstName, lastName, email, company, country, city, address1, zipPostalCode, phoneNumber } = addressData;
     await this.page.locator(this.firstName).fill(firstName);
     await this.page.locator(this.lastName).fill(lastName);
@@ -53,23 +55,5 @@ export class Addresses {
     const addressEntry = this.page.locator('.address-list .address-item').first();
     return addressEntry;
   }
-
-  async updateFirstAddressEntry(newAddressData) {
-    const { firstName, lastName, email, company, country, city, address1, zipPostalCode, phoneNumber } = newAddressData;
-    //await this.page.locator(this.addressList).first().locator(this.editButton).click();
-    await this.page.locator(this.firstName).fill(firstName);
-    await this.page.locator(this.lastName).fill(lastName);
-    await this.page.locator(this.email).fill(email);
-    await this.page.locator(this.company).fill(company);
-    await this.page.locator(this.country).selectOption(country);
-    await this.page.locator(this.city).fill(city);
-    await this.page.locator(this.address1).fill(address1);
-    await this.page.locator(this.zipPostalCode).fill(zipPostalCode);
-    await this.page.locator(this.phoneNumber).fill(phoneNumber);
-    await this.page.locator(this.saveButton).click();
-    return newAddressData;
-
-  }
-
 
 }

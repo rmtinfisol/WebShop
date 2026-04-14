@@ -2,10 +2,15 @@ export class TopLevelLinks {
     
     constructor (page) {
         this.page = page;
+        
     }
 
     async clickLoginLink() {
         await this.page.click('//a[@href="/login"]');
+    }
+
+    async clickLogOutLink() {
+        await this.page.click('//a[@href="/logout"]');
     }
 
     async clickRegisterLink() {
