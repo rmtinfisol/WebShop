@@ -2,6 +2,7 @@ export class TopLevelLinks {
     
     constructor (page) {
         this.page = page;
+        this.shoppingCartQty = '//a/span[@class="cart-qty"]'
         
     }
 

@@ -1,0 +1,18 @@
+export class CategoriesLeftMenu {
+    constructor(page) {
+        this.page = page;
+        this.computersLink = '//div[@class="listbox"]//a[contains(text(), "Computers")]';
+        this.electronicsLink = '//div[@class="listbox"]//a[contains(text(), "Electronics")]';
+        this.apparelLink = '//div[@class="listbox"]//a[contains(text(), "Apparel")]';
+        this.digitalDownloadsLink = '//div[@class="listbox"]//a[contains(text(), "Digital downloads")]';
+        this.booksLink = '//div[@class="listbox"]//a[contains(text(), "Books")]';
+        this.jewelryLink = '//div[@class="listbox"]//a[contains(text(), "Jewelry")]';
+        this.giftCardsLink = '//div[@class="listbox"]//a[contains(text(), "Gift Cards")]';
+        this.computersSubCategories = {
+            desktopsLink: '//div[@class="listbox"]//a[contains(text(), "Desktops")]',
+            notebooksLink: '//div[@class="listbox"]//a[contains(text(), "Notebooks")]',
+            accessoriesLink: '//div[@class="listbox"]//a[contains(text(), "Accessories")]'
+        };
+
+    }
+}
