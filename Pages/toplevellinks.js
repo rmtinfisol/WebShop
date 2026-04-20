@@ -33,4 +33,9 @@ export class TopLevelLinks {
     async getUserAccountinfo() {
         return await this.page.locator('.header-links a.account').textContent();
     }    
+
+    async getShoppingCartLinkQty() {
+        return parseInt((await this.page.locator(this.shoppingCartQty).textContent()).match(/\d+/));
+    }
+
 }

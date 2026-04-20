@@ -14,127 +14,125 @@ async function clearShoppingCart(page) {
     await shoppingCartPage.emptyShoppingCart()
 
     // Verify shopping cart is empty        
-    const exist = await shoppingCartPage.verifyShoppingcartIsEmpty();
+    const exist = await shoppingCartPage.isShoppingcartEmpty();
     expect(exist).toBeTruthy()
-
-    //await shoppingCartPage.locator(shoppingCartPage.updateShoppingCartButton).click();
-
 
 
 }
 
-test("Order and Checkout", async ({ page }) => {
 
-    const topLevelLinks = new TopLevelLinks(page);
-    const categoriesLeftMenu = new CategoriesLeftMenu(page);
-    const login = new Login(page);
-    const productdetailspage = new ProductDetailsPage(page);
-    const shoppingCartPage = new ShoppingCartPage(page);
+async function addtoCart(page, categoriesLeftMenu, productdetailspage, productCategory, itemtobuy, qty) {
 
 
-    // Navigate to the homepage and click on the login link
-    await page.goto('https://demowebshop.tricentis.com/');
-    await topLevelLinks.clickLoginLink();
-    // Login with valid credentials
-    await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
+    //Clicking on product category
+    await categoriesLeftMenu.selectCategory(productCategory);
 
-    //checking shopping cart and delete shopping cart items if there any items
+    //Click on the link for the item to buy
+    await page.getByText(itemtobuy).click();
 
-    const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
-    if (await cartqty !== '(0)') {
-
-        await clearShoppingCart(page)
-        await page.getByAltText('Tricentis Demo Web Shop').click()
-
-    }
-
-    //click on Apparel category from the left menu
-    await page.click(categoriesLeftMenu.apparelLink);
-    // Click on the first product in the list
-    await page.locator(categoriesLeftMenu.apparelLink).click();
-
-    // Click on the first product in the list
-    const itemtobuy = "Blue Jeans";
-    const qty = "25"
-    await page.getByText(itemtobuy).dblclick();
-
-    const headingText = await page.locator(productdetailspage.productName).innerText()
+    //Making sure product page is opened
+    const headingText = await page.locator(productdetailspage.productName).innerText();
     expect(headingText).toBe(itemtobuy);
+
+    //Enter quantify and add to cart
 
     await page.locator(productdetailspage.qtyInput).fill(qty);
     await page.locator(productdetailspage.addtoCartButton).click();
 
+    await page.reload();
+}
+
+test.describe('shopping Cart Tests', (page) => {
+
+    test("Order and Checkout", async ({ page }) => {
+
+        const topLevelLinks = new TopLevelLinks(page);
+        const categoriesLeftMenu = new CategoriesLeftMenu(page);
+        const login = new Login(page);
+        const productdetailspage = new ProductDetailsPage(page);
+        const shoppingCartPage = new ShoppingCartPage(page);
+
+
+        // Navigate to the homepage and click on the login link
+        await page.goto('https://demowebshop.tricentis.com/');
+        await topLevelLinks.clickLoginLink();
+        // Login with valid credentials
+        await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
+
+        //checking shopping cart and delete shopping cart items if there any items
+
+        const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
+        if (await cartqty !== '(0)') {
+
+            await clearShoppingCart(page)
+            //await page.getByAltText('Tricentis Demo Web Shop').click()
+
+        }
+
+        await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Blue Jeans", "25");
+
+
+    });
+
+    test.only("Verify product and Price Details in the cart", async ({ page }) => {
+
+        const topLevelLinks = new TopLevelLinks(page);
+        const categoriesLeftMenu = new CategoriesLeftMenu(page);
+        const login = new Login(page);
+        const productdetailspage = new ProductDetailsPage(page);
+        const shoppingCartPage = new ShoppingCartPage(page);
+
+
+        // Navigate to the homepage and click on the login link
+        await page.goto('https://demowebshop.tricentis.com/');
+
+        await topLevelLinks.clickLoginLink();
+
+        // Login with valid credentials
+        await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
+
+        //Checking Shopping Cart is empty
+
+        const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
+        if (await cartqty !== '(0)') {
+
+            await clearShoppingCart(page)
+            //await page.getByAltText('Tricentis Demo Web Shop').click()
+
+        }
+
+        //click on Apparel category from the left menu
+        await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Blue Jeans", "25");
+        await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Casual Golf Belt", "25");
+
+        await topLevelLinks.clickShoppingCartLink();
+        await page.locator(shoppingCartPage.shoppingCart).hover();
+
+
+        //get shoppingCartdata and validate it against Cart-total summary data
+        const shoppingCartItemsData = await shoppingCartPage.getShoppingCartData()
+
+        const shoppingCartTotals = await shoppingCartPage.getShoppingCartTotals(shoppingCartItemsData)
+
+        const totalQuanities = await shoppingCartTotals.totalQuantities
+        const totalPrice = await shoppingCartTotals.totalPrice
+
+
+        let actualShoppingCartQty = await topLevelLinks.getShoppingCartLinkQty();
+
+
+        //let actualShoppingCartQty = parseInt(shoppingCartQtyElementText.match(/\d+/));
+        expect(actualShoppingCartQty).toBe(totalQuanities)
+
+        const cartTotalData = await shoppingCartPage.getCartTotalTableData()
+
+        console.log(cartTotalData);
+
+        const cartTotalSubTotal = cartTotalData['Sub-Total']
+
+        expect(totalPrice).toBe(cartTotalSubTotal)
+
+    });
+
 });
-
-test("Verify product and Price Details in the cart", async ({ page }) => {
-
-    const topLevelLinks = new TopLevelLinks(page);
-    const categoriesLeftMenu = new CategoriesLeftMenu(page);
-    const login = new Login(page);
-    const productdetailspage = new ProductDetailsPage(page);
-    const shoppingCartPage = new ShoppingCartPage(page);
-
-
-    // Navigate to the homepage and click on the login link
-    await page.goto('https://demowebshop.tricentis.com/');
-
-    await topLevelLinks.clickLoginLink();
-
-    // Login with valid credentials
-    await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
-
-    //Checking Shopping Cart is empty
-
-    const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
-    if (await cartqty !== '(0)') {
-
-        await clearShoppingCart(page)
-        await page.getByAltText('Tricentis Demo Web Shop').click()
-
-    }
-
-    //click on Apparel category from the left menu
-    await page.click(categoriesLeftMenu.apparelLink);
-    // Click on the first product in the list
-    await page.locator(categoriesLeftMenu.apparelLink).click();
-
-    // Click on the first product in the list
-    const itemtobuy = "Blue Jeans";
-    const qty = "25"
-    await page.getByText(itemtobuy).dblclick();
-
-    const headingText = await page.locator(productdetailspage.productName).innerText()
-    expect(headingText).toBe(itemtobuy);
-
-    await page.locator(productdetailspage.qtyInput).fill(qty);
-    await page.locator(productdetailspage.addtoCartButton).click();
-
-    await topLevelLinks.clickShoppingCartLink()
-
-    const shoppingCartItemData = await shoppingCartPage.getShoppingCartData()
-
-    /*
-    const allCartItems = [];
-
-    const shoppingCartTable = page.locator(shoppingCartPage.shoppingCart);
-    const shoppingCartItemRows = shoppingCartTable.locator(shoppingCartPage.shoppingCartRows);
-    const rowCount = await shoppingCartItemRows.count();
-
-    for (let i = 0; i < rowCount; i++) {
-        const cartItemrow = shoppingCartItemRows.nth(i);
-
-        const cartItems = {
-            removeItemElement: await cartItemrow.locator(shoppingCartPage.removeFromCartChkBox),
-            productName: await cartItemrow.locator(shoppingCartPage.shoppingCartProduct).textContent(),
-            price: parseFloat((await cartItemrow.locator(shoppingCartPage.shoppingCartPrice).textContent()).replace(/[^0-9.]/g, '')),
-            quantity: parseInt(await cartItemrow.locator(shoppingCartPage.shoppingCartQtyInput).inputValue()),
-            total: parseFloat((await cartItemrow.locator(shoppingCartPage.shoppingCartSubTotal).textContent()).replace(/[^0-9.]/g, ''))
-        };
-
-        allCartItems.push(cartItems);
-    }
-        */
-});
-
-
 

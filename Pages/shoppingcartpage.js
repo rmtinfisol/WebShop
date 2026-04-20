@@ -2,10 +2,11 @@ import { TopLevelLinks } from '../Pages/toplevellinks';
 import { CategoriesLeftMenu } from '../Pages/categoriesleftmenu';
 import { Login } from '../Pages/login';
 import { ProductDetailsPage } from '../Pages/productdetailspage';
+import { subscribe } from 'node:diagnostics_channel';
 
 
 export class ShoppingCartPage {
-    
+
     constructor(page) {
         this.page = page;
         this.shoppingCartPageTitle = '//div[@class="page-title"]';
@@ -28,11 +29,14 @@ export class ShoppingCartPage {
         this.countryDropdown = '#CountryId';
         this.zipcodeTxtBox = '#ZipPostalCode';
         this.stateProvinceIdDropdown = '#StateProvinceId';
-        this.cartTotal = '//table[@class="cart-total"]//tr';
+        this.cartTotal = 'table.cart-total';
+        this.cartTotalTableRows = 'table.cart-total tr'
+        this.cartTotalTableFieldName = '.cart-total-left'
+        this.cartTotalTableFieldValue = '.cart-total-right'
 
     }
 
-        async selectShoppingCartItemsforRemoval() {
+    async selectShoppingCartItemsforRemoval() {
         const shoppingCartTable = await this.page.locator(this.shoppingCart);
         const cartrows = await shoppingCartTable.locator(this.shoppingCartRows);
         const removeItem = await cartrows.locator(this.removeFromCartChkBox)
@@ -42,9 +46,9 @@ export class ShoppingCartPage {
         }
     }
 
-    async verifyShoppingcartIsEmpty() {
+    async isShoppingcartEmpty() {
 
-        if (await this.page.locator(this.shoppingCart).count > 1) {
+        if (await this.page.locator(this.shoppingCart).count > 0) {
             console.log("shopping cart is not empty")
             return false;
         }
@@ -59,11 +63,10 @@ export class ShoppingCartPage {
 
         await this.selectShoppingCartItemsforRemoval()
         await this.page.locator(this.updateShoppingCartButton).click();
-
-        // Verify shopping cart is empty        
-       // const exist = await this.verifyShoppingcartIsEmpty();
         await this.page.getByAltText('Tricentis Demo Web Shop').click()
     }
+
+    //function to read UI shopping cart and return an object with data (Price, quantity and Total data as numbers and float)
 
     async getShoppingCartData() {
         const allCartItems = [];
@@ -90,4 +93,54 @@ export class ShoppingCartPage {
     }
 
 
+    async getCartTotalTableData() {
+
+        
+        const cartTotalTableData = {}
+
+        const rows = await this.page.locator(this.cartTotalTableRows).all();
+
+        for (const row of rows) {
+            const name = await row.locator(this.cartTotalTableFieldName).textContent();
+            const value = parseFloat(await row.locator(this.cartTotalTableFieldValue).textContent());
+
+            const cleanKey = name.trim().replace(/:/g, '');
+
+            cartTotalTableData[cleanKey] = value;
+
+            
+        }
+
+        return cartTotalTableData;
+
+    }
+
+    //get total items count and Total price data from cartTotalTableData object. You get this object from function getCartTotalTableData()
+
+    async getShoppingCartTotals(cartItemsData){
+
+        let totalQuanitiesinCart = 0;
+            let totalpriceinShoppingcart= 0;
+
+            for (const cartItem of cartItemsData) {
+
+                const productName = cartItem.productName;
+                const productPrice = cartItem.price
+                const totalPrice = cartItem.total;
+                const quantity = cartItem.quantity;
+
+                totalQuanitiesinCart += quantity;
+                totalpriceinShoppingcart += totalPrice
+                
+            }
+         return {
+                    totalQuantities: totalQuanitiesinCart,
+                    totalPrice: totalpriceinShoppingcart
+                
+                }
+    }
+
+
 }
+
+
