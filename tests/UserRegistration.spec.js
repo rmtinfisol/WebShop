@@ -63,10 +63,6 @@ test.describe('User Registration', () => {
         expect(await page.locator(userRegistration.lastName).inputValue()).toBe(newUserData.lastName);
         expect(await page.locator(userRegistration.email).inputValue()).toBe(newUserData.email);
 
-
-
-
-
     });
 
 

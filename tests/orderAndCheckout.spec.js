@@ -4,11 +4,13 @@ import { CategoriesLeftMenu } from '../Pages/categoriesleftmenu';
 import { Login } from '../Pages/login';
 import { ProductDetailsPage } from '../Pages/productdetailspage';
 import { ShoppingCartPage } from '../Pages/shoppingcartpage';
+import { CheckOut } from '../Pages/checkout';
 
 async function clearShoppingCart(page) {
 
     const topLevelLinks = new TopLevelLinks(page);
     const shoppingCartPage = new ShoppingCartPage(page);
+
 
     await topLevelLinks.clickShoppingCartLink();
     await shoppingCartPage.emptyShoppingCart()
@@ -22,7 +24,6 @@ async function clearShoppingCart(page) {
 
 
 async function addtoCart(page, categoriesLeftMenu, productdetailspage, productCategory, itemtobuy, qty) {
-
 
     //Clicking on product category
     await categoriesLeftMenu.selectCategory(productCategory);
@@ -40,6 +41,23 @@ async function addtoCart(page, categoriesLeftMenu, productdetailspage, productCa
     await page.locator(productdetailspage.addtoCartButton).click();
 
     await page.reload();
+}
+
+async function paymentCreditCard(page, checkout) {
+
+    await page.locator(checkout.creditCardType).select('Visa')
+    await page.locator(checkout.cardHolderName).fill('Barbara Gordon')
+    await page.locator(checkout.cardNumber).fill('4485564059489345')
+    await page.locator(checkout.expireMonth).select('04')
+    await page.locator(checkout.expireYear).select('2024')
+    await page.locator(checkout.cardCode).fill('123')
+
+    await page.locatpr(checkout.paymentInformationContinueButton).click()
+
+
+
+
+
 }
 
 test.describe('shopping Cart Tests', (page) => {
@@ -74,7 +92,7 @@ test.describe('shopping Cart Tests', (page) => {
 
     });
 
-    test.only("Verify product and Price Details in the cart", async ({ page }) => {
+    test("Verify product and Price Details in the cart", async ({ page }) => {
 
         const topLevelLinks = new TopLevelLinks(page);
         const categoriesLeftMenu = new CategoriesLeftMenu(page);
@@ -97,8 +115,6 @@ test.describe('shopping Cart Tests', (page) => {
         if (await cartqty !== '(0)') {
 
             await clearShoppingCart(page)
-            //await page.getByAltText('Tricentis Demo Web Shop').click()
-
         }
 
         //click on Apparel category from the left menu
@@ -112,17 +128,25 @@ test.describe('shopping Cart Tests', (page) => {
         //get shoppingCartdata and validate it against Cart-total summary data
         const shoppingCartItemsData = await shoppingCartPage.getShoppingCartData()
 
+        //verify shopping cart total for each line item = price* quantity
+
+        for (const item of shoppingCartItemsData) {
+
+            expect(item.price * item.quantity).toBe(item.total)
+
+        }
+
         const shoppingCartTotals = await shoppingCartPage.getShoppingCartTotals(shoppingCartItemsData)
 
         const totalQuanities = await shoppingCartTotals.totalQuantities
         const totalPrice = await shoppingCartTotals.totalPrice
 
-
         let actualShoppingCartQty = await topLevelLinks.getShoppingCartLinkQty();
 
 
-        //let actualShoppingCartQty = parseInt(shoppingCartQtyElementText.match(/\d+/));
+        // verifying Item count displayed in shoppingCart is matching with some of quanties for each item
         expect(actualShoppingCartQty).toBe(totalQuanities)
+
 
         const cartTotalData = await shoppingCartPage.getCartTotalTableData()
 
@@ -130,9 +154,96 @@ test.describe('shopping Cart Tests', (page) => {
 
         const cartTotalSubTotal = cartTotalData['Sub-Total']
 
+        //verify total price of all items in shopping cart is matching with subTotal in cart Total Data
         expect(totalPrice).toBe(cartTotalSubTotal)
 
     });
+
+    test.only("Verify a user can purchase items and complete the checkout successfully", async ({ page }) => {
+
+        const topLevelLinks = new TopLevelLinks(page);
+        const categoriesLeftMenu = new CategoriesLeftMenu(page);
+        const login = new Login(page);
+        const productdetailspage = new ProductDetailsPage(page);
+        const shoppingCartPage = new ShoppingCartPage(page);
+        const checkout = new CheckOut(page);
+
+         // Navigate to the homepage and click on the login link
+        await page.goto('https://demowebshop.tricentis.com/');
+
+        await topLevelLinks.clickLoginLink();
+
+        // Login with valid credentials
+        await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
+
+        //Checking Shopping Cart is empty
+
+        const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
+        if (await cartqty !== '(0)') {
+
+            await clearShoppingCart(page)
+        }
+
+        //click on Apparel category from the left menu
+        await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Blue Jeans", "25");
+       // await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Casual Golf Belt", "25");
+
+        await topLevelLinks.clickShoppingCartLink();
+
+        await page.locator(shoppingCartPage.termsOfServiceChkBox).setChecked(true);
+        //await page.getByRole('checkbox').setChecked(true);
+
+
+        //await page.locator(shoppingCartPage.checkoutButton).click();
+        await page.getByRole('button', { name : 'checkout'}).click();
+
+        await page.locator(checkout.addressDropdown).selectOption({ index: 0 });
+
+        //clicking continue button twice for moving to Shipping Address (no instore pickup)
+
+        
+        await page.locator(checkout.billingAddressContinueButton).click();
+        //await page.getByRole('input', { value : 'Continue' }).click();
+        await page.locator(checkout.shippingAddressContinueButton).click();
+      
+       
+        //Select shipping method
+
+         const shipMethodRadio = await checkout.selectShippingMethodByLabel(/Next Day Air/i);
+         await shipMethodRadio.click();
+         
+
+        const shippingMethodDescription = await checkout.getShippingMethodDescription('Next Day Air (40.00)');
+        
+        expect(checkout.shippingMethodDescriptionMaster['Next Day Air (40.00)']).toBe(shippingMethodDescription);
+        
+
+        //click continue button in shipping Method screen
+
+        await page.locator(checkout.shippingMethodContinueButton).click();
+
+        //select Payment method
+        
+        const paymentMethod = await checkout.paymentMethodElement("COD");
+        await paymentMethod.check();
+        await page.locator(checkout.paymentMethodContinueButton).click();
+
+        //Payment information
+        await page.locator(checkout.paymentInformationContinueButton).click();
+
+        await page.locator(checkout.confirmContinueButton).click();
+        await expect(page.locator('#confirm-order-please-wait')).toBeHidden();
+
+        
+    })
+
+
+    test.only("Complete an order with Instore Pickup and Payment via Check / Money Order", async ({page}) => {
+        page.goto('https://demowebshop.tricentis.com/')
+        await page.waitForTimeout(5000)
+
+    })
+
 
 });
 

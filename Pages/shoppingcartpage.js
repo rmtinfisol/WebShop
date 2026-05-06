@@ -21,7 +21,7 @@ export class ShoppingCartPage {
         this.continueShoppingButton = '//input[@value="Continue shopping"]';
         this.applyCouponButton = '//input[@value="Apply coupon"]';
         this.estimateShippingButton = '//input[@value="Estimate shipping"]';
-        this.checkoutButton = '//input[@value="checkout"]';
+        this.checkoutButton = '//button[@value="checkout"]';
         this.addGiftCardButton = '//input[@value="Add gift card"]';
         this.couponCodeTxtBox = '//input[@name="discountcouponcode"]';
         this.giftCardTxtBox = '//input[@name="giftcardcouponcode"]';
@@ -37,18 +37,22 @@ export class ShoppingCartPage {
     }
 
     async selectShoppingCartItemsforRemoval() {
-        const shoppingCartTable = await this.page.locator(this.shoppingCart);
-        const cartrows = await shoppingCartTable.locator(this.shoppingCartRows);
-        const removeItem = await cartrows.locator(this.removeFromCartChkBox)
+        const shoppingCartTable = this.page.locator(this.shoppingCart);
+        const cartrows = shoppingCartTable.locator(this.shoppingCartRows);
+        const removeItem = cartrows.locator(this.removeFromCartChkBox)
 
-        for (let i = 0; i < await removeItem.count(); i++) {
-            await removeItem.nth(i).check();
+        const count = await removeItem.count()
+        console.log("Cart Item Count: "+ count)
+
+
+        for (let i = 0; i < count; i++) {
+                await removeItem.nth(i).check();
         }
     }
 
     async isShoppingcartEmpty() {
 
-        if (await this.page.locator(this.shoppingCart).count > 0) {
+        if (await this.page.locator(this.shoppingCart).count() > 0) {
             console.log("shopping cart is not empty")
             return false;
         }
@@ -79,7 +83,7 @@ export class ShoppingCartPage {
             const cartItemrow = shoppingCartItemRows.nth(i);
 
             const cartItems = {
-                removeItemElement: await cartItemrow.locator(this.removeFromCartChkBox),
+                removeItemElement: cartItemrow.locator(this.removeFromCartChkBox),
                 productName: await cartItemrow.locator(this.shoppingCartProduct).textContent(),
                 price: parseFloat((await cartItemrow.locator(this.shoppingCartPrice).textContent()).replace(/[^0-9.]/g, '')),
                 quantity: parseInt(await cartItemrow.locator(this.shoppingCartQtyInput).inputValue()),
