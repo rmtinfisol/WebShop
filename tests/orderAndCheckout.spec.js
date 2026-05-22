@@ -26,7 +26,7 @@ async function clearShoppingCart(page) {
 async function addtoCart(page, categoriesLeftMenu, productdetailspage, productCategory, itemtobuy, qty) {
 
     //Clicking on product category
-    await categoriesLeftMenu.selectCategory(productCategory);
+    await categoriesLeftMenu.selectCgoatery(productCategory);
 
     //Click on the link for the item to buy
     await page.getByText(itemtobuy).click();
@@ -53,10 +53,6 @@ async function paymentCreditCard(page, checkout) {
     await page.locator(checkout.cardCode).fill('123')
 
     await page.locatpr(checkout.paymentInformationContinueButton).click()
-
-
-
-
 
 }
 

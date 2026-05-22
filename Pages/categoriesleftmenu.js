@@ -15,54 +15,24 @@ export class CategoriesLeftMenu {
         };
 
         this.AvailableCategories = Object.freeze({
-        BOOKS: 'Books',
-        COMPUTERS: 'Computers',
-        DESKTOPS: 'Desktops',
-        NOTEBOOKS: 'Notebooks',
-        ACCESSORIES: 'Accessories',
-        ELECTRONICS: 'Electronics',
-        APPAREL_AND_SHOES: 'ApparelAndShoes',
-        DIGITAL_DOWNLOADS: 'Digital Downloads',
-        JEWELRY: 'Jewelry',
-        GIFT_CARDS: 'GiftCards'
-    }); 
+            BOOKS: 'Books',
+            COMPUTERS: 'Computers',
+            DESKTOPS: 'Desktops',
+            NOTEBOOKS: 'Notebooks',
+            ACCESSORIES: 'Accessories',
+            ELECTRONICS: 'Electronics',
+            APPAREL_AND_SHOES: 'ApparelAndShoes',
+            DIGITAL_DOWNLOADS: 'Digital Downloads',
+            JEWELRY: 'Jewelry',
+            GIFT_CARDS: 'GiftCards'
+        });
 
     }
 
 
     async selectCategory(category) {
-    
-        switch (category) {
 
-        case this.AvailableCategories.BOOKS:
-            await this.page.locator(this.booksLink).click();
-            break;
-
-        case this.AvailableCategories.COMPUTERS:
-            await this.page.locator(this.computersLink).click();
-            break;
-
-        case this.AvailableCategories.DESKTOPS:
-            await this.page.locator(this.computersSubCategories.desktopsLink).click();
-            break;
-
-        case this.AvailableCategories.NOTEBOOKS:
-            await this.page.locator(this.computersSubCategories.notebooksLink).click();
-            break;
-
-        case this.AvailableCategories.ACCESSORIES:
-            await this.page.locator(this.computersSubCategories.Accessories).click();
-            break;
-
-        case this.AvailableCategories.ELECTRONICS:
-            await this.page.locator(this.electronicsLink).click();
-            break;
-        
-        case this.AvailableCategories.APPAREL_AND_SHOES:
-            await this.page.locator(this.apparelLink).click();
-            break;
-        
+         const categoryLink = this.page.locator('.block-category-navigation').getByRole('link', { name: category, exact: true });
+         await categoryLink.click();
     }
-
-}
 }
