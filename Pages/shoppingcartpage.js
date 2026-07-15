@@ -9,10 +9,10 @@ export class ShoppingCartPage {
 
     constructor(page) {
         this.page = page;
-        this.shoppingCartPageTitle = '//div[@class="page-title"]';
-        this.shoppingCart = '//table[@class="cart"]';
+        this.shoppingCartPageTitle = 'div.page-title';
+        this.shoppingCart = 'table.cart';
         this.shoppingCartRows = 'tbody tr';
-        this.removeFromCartChkBox = '//input[@name="removefromcart"]';
+        this.removeFromCartChkBox = 'input[name="removefromcart"]';
         this.shoppingCartProduct = 'a.product-name';
         this.shoppingCartQtyInput = 'input.qty-input';
         this.shoppingCartSubTotal = 'span.product-subtotal';
@@ -37,26 +37,22 @@ export class ShoppingCartPage {
     }
 
     async selectShoppingCartItemsforRemoval() {
-        const shoppingCartTable = this.page.locator(this.shoppingCart);
-        const cartrows = shoppingCartTable.locator(this.shoppingCartRows);
-        const removeItem = cartrows.locator(this.removeFromCartChkBox)
-
-        const count = await removeItem.count()
-        console.log("Cart Item Count: "+ count)
-
+        const removeItem = this.page.locator(`${this.shoppingCart} ${this.shoppingCartRows} ${this.removeFromCartChkBox}`);
+        const count = await removeItem.count();
+        console.log("Cart Item Count: " + count)
 
         for (let i = 0; i < count; i++) {
-                await removeItem.nth(i).check();
+            await removeItem.nth(i).check();
         }
     }
 
-    async isShoppingcartEmpty() {
+    async   isShoppingcartEmpty() {
 
-        if (await this.page.locator(this.shoppingCart).count() > 0) {
+        const rowCount = await this.page.locator(`${this.shoppingCart} ${this.shoppingCartRows}`).count();
+        if (rowCount > 0) {
             console.log("shopping cart is not empty")
             return false;
-        }
-        else {
+        } else {
             console.log("shopping cart is  empty")
             return true;
         }

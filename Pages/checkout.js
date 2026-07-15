@@ -106,7 +106,7 @@ export class CheckOut {
 
         if (!methodId) {
             console.log(`Invalid Payment Method ${paymentMethod} No Mapping exist`)
-        }
+        } 
 
         const paymentMethodLocator = `#paymentmethod_${methodId}`
 
