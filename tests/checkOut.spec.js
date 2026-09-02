@@ -1,23 +1,25 @@
 import { test, expect } from '../fixtures/clearShoppingCart'
-import { TopLevelLinks } from '../Pages/toplevellinks';
+//import { TopLevelLinks } from '../Pages/toplevellinks';
 import { ShoppingCartPage } from '../Pages/shoppingcartpage';
-import { CategoriesLeftMenu } from '../Pages/categoriesleftmenu';
+//import { CategoriesLeftMenu } from '../Pages/categoriesleftmenu';
 import { ProductDetailsPage } from '../Pages/productdetailspage';
 import { ProductLists } from '../Pages/productlists';
 import { CheckOutPage } from '../Pages/checkoutcomponents/checkoutpage';
+import { CommonLinks } from '../pages/commonlinks';
 
 test('Checkout with Cash on Delivery', async ({ emptyShoppingCart, page }) => {
 
     //const topLevelLinks = new TopLevelLinks(page)
-    const categoriesleftmenu = new CategoriesLeftMenu(page)
+   // const categoriesleftmenu = new CategoriesLeftMenu(page)
     const productdetailspage = new ProductDetailsPage(page)
     const productlists = new ProductLists(page)
     const checkOutPage = new CheckOutPage(page)
-    const topLevelLinks = new TopLevelLinks(page)
+    //const topLevelLinks = new TopLevelLinks(page)
     const shoppingCartPage = new ShoppingCartPage(page)
+    const commonLinks = new CommonLinks(page)
 
-    await productdetailspage.addItemsToCart(categoriesleftmenu, productlists, categoriesleftmenu.AvailableCategories.BOOKS, 'Fiction', 5)
-    await topLevelLinks.clickShoppingCartLink()
+    await productdetailspage.addItemsToCart(commonLinks.categoriesLeftMenu, productlists, commonLinks.categoriesLeftMenu.AvailableCategories.BOOKS, 'Fiction', 5)
+    await commonLinks.topLevelLinks.clickShoppingCartLink();
 
     await page.locator(shoppingCartPage.termsOfServiceChkBox).setChecked(true);
 
