@@ -8,6 +8,7 @@ import { TopLevelLinks } from '../Pages/toplevellinks';
 
 
 test.describe('Address page tests', () => {
+    test.use({ storageState: { cookies: [], origins: [] } });
 
     test('Login and Add an address to a newly created user', async ({ page }) => {
 

@@ -43,7 +43,7 @@ export class UserRegistration {
 
   async registerNewUserwithRandomData() {
 
-    const gender = Math.random() < 0.5 ? 'male' : 'female';
+    const gender = Math.random() < 0.5 ? 'Male' : 'Female';
     const firstName = Math.random().toString(36).substring(2, 7);
     const lastName = Math.random().toString(36).substring(2, 7);
     const email = `${firstName}.${lastName}@example.com`;

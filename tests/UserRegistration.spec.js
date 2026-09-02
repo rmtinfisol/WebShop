@@ -7,8 +7,11 @@ import { TopLevelLinks } from '../Pages/toplevellinks';
 
 
 test.describe('User Registration', () => {
+ // test.use({ storageState: undefined });
+ test.use({ storageState: { cookies: [], origins: [] } });
 
   test('should register a new user successfully', async ({ page }) => {
+ 
 
     const topLevelLinks = new TopLevelLinks(page);
 
@@ -52,7 +55,7 @@ test.describe('User Registration', () => {
 
         // Verify that the user information on the My account - Customer information page is correct
 
-        if (newUserData.gender =='male') {
+        if (newUserData.gender =='Male') {
           expect(await page.locator(userRegistration.genderMale).isChecked()).toBeTruthy();
           
         } else {

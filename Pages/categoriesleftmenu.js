@@ -21,7 +21,7 @@ export class CategoriesLeftMenu {
             NOTEBOOKS: 'Notebooks',
             ACCESSORIES: 'Accessories',
             ELECTRONICS: 'Electronics',
-            APPAREL_AND_SHOES: 'ApparelAndShoes',
+            APPAREL_AND_SHOES: 'Apparel & Shoes',
             DIGITAL_DOWNLOADS: 'Digital Downloads',
             JEWELRY: 'Jewelry',
             GIFT_CARDS: 'GiftCards'

@@ -6,7 +6,7 @@ import { TopLevelLinks } from "../Pages/toplevellinks";
 
 test.describe('Login Tests', (page) => {
 
-  
+  test.use({ storageState: { cookies: [], origins: [] } });
 
     test('should login successfully with valid credentials', async ({ page }) => {
 

@@ -26,7 +26,7 @@ async function clearShoppingCart(page) {
 async function addtoCart(page, categoriesLeftMenu, productdetailspage, productCategory, itemtobuy, qty) {
 
     //Clicking on product category
-    await categoriesLeftMenu.selectCgoatery(productCategory);
+    await categoriesLeftMenu.selectCategory(productCategory);
 
     //Click on the link for the item to buy
     await page.getByText(itemtobuy).click();
@@ -69,9 +69,9 @@ test.describe('shopping Cart Tests', (page) => {
 
         // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
-        await topLevelLinks.clickLoginLink();
+       // await topLevelLinks.clickLoginLink();
         // Login with valid credentials
-        await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
+        //await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
 
         //checking shopping cart and delete shopping cart items if there any items
 
@@ -100,10 +100,10 @@ test.describe('shopping Cart Tests', (page) => {
         // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
 
-        await topLevelLinks.clickLoginLink();
+        //await topLevelLinks.clickLoginLink();
 
         // Login with valid credentials
-        await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
+        //await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
 
         //Checking Shopping Cart is empty
 
@@ -155,7 +155,7 @@ test.describe('shopping Cart Tests', (page) => {
 
     });
 
-    test.only("Verify a user can purchase items and complete the checkout successfully", async ({ page }) => {
+    test("Verify a user can purchase items and complete the checkout successfully", async ({ page }) => {
 
         const topLevelLinks = new TopLevelLinks(page);
         const categoriesLeftMenu = new CategoriesLeftMenu(page);
@@ -167,10 +167,10 @@ test.describe('shopping Cart Tests', (page) => {
          // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
 
-        await topLevelLinks.clickLoginLink();
+     //   await topLevelLinks.clickLoginLink();
 
         // Login with valid credentials
-        await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
+       // await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
 
         //Checking Shopping Cart is empty
 
@@ -234,7 +234,7 @@ test.describe('shopping Cart Tests', (page) => {
     })
 
 
-    test.only("Complete an order with Instore Pickup and Payment via Check / Money Order", async ({page}) => {
+    test("Complete an order with Instore Pickup and Payment via Check / Money Order", async ({page}) => {
         page.goto('https://demowebshop.tricentis.com/')
         await page.waitForTimeout(5000)
 
