@@ -15,6 +15,10 @@ test.describe('Login Tests', (page) => {
         const topLevelLinks = new TopLevelLinks(page);
 
         await page.goto('https://demowebshop.tricentis.com/');
+
+        const isUserLoggedIn = await topLevelLinks.isUserLoggedIn()
+        expect(isUserLoggedIn).toBeFalsy();
+
         await topLevelLinks.clickLoginLink();
 
         const username = 'qr1w0.hnqmj@example.com';

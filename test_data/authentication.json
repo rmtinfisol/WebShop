@@ -15,7 +15,7 @@
       "value": "78382081.1777257466.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)",
       "domain": ".demowebshop.tricentis.com",
       "path": "/",
-      "expires": 1804142961,
+      "expires": 1804143723,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -45,7 +45,7 @@
       "value": "fa8cbd4f-ae87-45e0-9778-f5e99f53c43f",
       "domain": "demowebshop.tricentis.com",
       "path": "/",
-      "expires": 1819910961.276006,
+      "expires": 1819911722.87625,
       "httpOnly": true,
       "secure": false,
       "sameSite": "Lax"
@@ -55,7 +55,7 @@
       "value": "78382081.1476898511.1777257466.1788365755.1788374960.6",
       "domain": ".demowebshop.tricentis.com",
       "path": "/",
-      "expires": 1822934961.443025,
+      "expires": 1822935723.030435,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -65,14 +65,14 @@
       "value": "1",
       "domain": ".demowebshop.tricentis.com",
       "path": "/",
-      "expires": 1788375560,
+      "expires": 1788376322,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "NOPCOMMERCE.AUTH",
-      "value": "91041618798B8034ADE0127B5646D821292FE331DD3C4471580C362DD88FB377173AB0E6CA4DB790B50D382A7E06D577DC6CF61EEBE929CC0318EC5BDE9204F69EA4DC16D9C9EA951C86FE56D53F364CBAABC2BF11E8AD249A2986F93BA6CE745DB68357D2361BDFD5FD568EE33CB4461353F6E6273B4B1B389B178F142CE153F5370D19F9939B75C9AD3DADE4C33C2973C6FF8B76B90C353ABBEA63EACBA8C903598645DE5CADBBC9E3955F7EF9BEFC",
+      "value": "9BC70C35E65CD3C9CCB9C6DC762440B235C0A7E6BBB1E824917D5B9EA2D3935EC8ED0EA574DF02DB254063FCB558EF87AC0DC76BF1BC8B7682743F8A29A1D6121CEC544589C4638DE7FD9A88905837AD467A1F0B6204758255CED6DA29874449AA2DBF33143D5FF0335887BAD57BC2D04FA85ED17109B8F0D2E96DE70C11AE3930885779BDFE368B830B7D7AB1C5E05C9929547CBCACC7FE34034793327AC1E1778C67696CCFF85E5D06E33A68BCD900",
       "domain": "demowebshop.tricentis.com",
       "path": "/",
       "expires": -1,
@@ -82,10 +82,10 @@
     },
     {
       "name": "__utmb",
-      "value": "78382081.2.10.1788374960",
+      "value": "78382081.4.10.1788374960",
       "domain": ".demowebshop.tricentis.com",
       "path": "/",
-      "expires": 1788376761,
+      "expires": 1788377523,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"

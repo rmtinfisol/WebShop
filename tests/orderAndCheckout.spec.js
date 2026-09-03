@@ -75,8 +75,13 @@ test.describe('shopping Cart Tests', (page) => {
 
         //checking shopping cart and delete shopping cart items if there any items
 
-        const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
-        if (await cartqty !== '(0)') {
+        const isUserLoggedIn = await topLevelLinks.isUserLoggedIn()
+        expect(isUserLoggedIn).toBeTruthy();
+
+        const cartEmpty = await topLevelLinks.isShoppingcartEmpty() 
+
+       // const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
+        if (!cartEmpty) {
 
             await clearShoppingCart(page)
             //await page.getByAltText('Tricentis Demo Web Shop').click()
