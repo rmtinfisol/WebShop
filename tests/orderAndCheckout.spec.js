@@ -70,11 +70,7 @@ test.describe('shopping Cart Tests', (page) => {
 
         // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
-        // await topLevelLinks.clickLoginLink();
-        // Login with valid credentials
-        //await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
-
-        //checking shopping cart and delete shopping cart items if there any items
+       
 
         const isUserLoggedIn = await topLevelLinks.isUserLoggedIn()
         expect(isUserLoggedIn).toBeTruthy();
@@ -106,14 +102,6 @@ test.describe('shopping Cart Tests', (page) => {
         // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
 
-        //await topLevelLinks.clickLoginLink();
-
-        // Login with valid credentials
-        //await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
-
-        //Checking Shopping Cart is empty
-
-        //const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
 
         const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
 
@@ -176,14 +164,7 @@ test.describe('shopping Cart Tests', (page) => {
         // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
 
-        //   await topLevelLinks.clickLoginLink();
-
-        // Login with valid credentials
-        // await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
-
-        //Checking Shopping Cart is empty
-
-        // const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
+  
         const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
 
         if (!cartEmpty) {
@@ -269,7 +250,7 @@ test.describe('shopping Cart Tests', (page) => {
         
         //await checkOutPages.billingAddress.selectAddressByIndex(0);
 
-        await checkOutPages.performCheckOut(0,true, 'Credit Card');
+        await checkOutPages.performCheckOut(0,true, 'Check / Money Order');
 
         
 
