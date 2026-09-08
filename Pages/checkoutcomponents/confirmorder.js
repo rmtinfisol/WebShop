@@ -5,6 +5,7 @@ export class ConfirmOrder {
         this.page = page;
         this.root = page.locator('#opc-confirm_order');
         this.confirmOrderDetails = page.locator('#checkout-confirm-order-load');
+        this.confirmOrderButton = this.root.getByRole('button', { name: 'Confirm' });
     }
 
         async screenTitle(){

@@ -5,6 +5,7 @@ import { Login } from '../Pages/login';
 import { ProductDetailsPage } from '../Pages/productdetailspage';
 import { ShoppingCartPage } from '../Pages/shoppingcartpage';
 import { CheckOut } from '../Pages/checkout';
+import { CheckOutPage } from '../Pages/checkoutcomponents/checkoutpage';
 
 async function clearShoppingCart(page) {
 
@@ -69,7 +70,7 @@ test.describe('shopping Cart Tests', (page) => {
 
         // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
-       // await topLevelLinks.clickLoginLink();
+        // await topLevelLinks.clickLoginLink();
         // Login with valid credentials
         //await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
 
@@ -78,9 +79,9 @@ test.describe('shopping Cart Tests', (page) => {
         const isUserLoggedIn = await topLevelLinks.isUserLoggedIn()
         expect(isUserLoggedIn).toBeTruthy();
 
-        const cartEmpty = await topLevelLinks.isShoppingcartEmpty() 
+        const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
 
-       // const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
+        // const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
         if (!cartEmpty) {
 
             await clearShoppingCart(page)
@@ -112,8 +113,11 @@ test.describe('shopping Cart Tests', (page) => {
 
         //Checking Shopping Cart is empty
 
-        const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
-        if (await cartqty !== '(0)') {
+        //const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
+
+        const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
+
+        if (!cartEmpty) {
 
             await clearShoppingCart(page)
         }
@@ -169,25 +173,27 @@ test.describe('shopping Cart Tests', (page) => {
         const shoppingCartPage = new ShoppingCartPage(page);
         const checkout = new CheckOut(page);
 
-         // Navigate to the homepage and click on the login link
+        // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
 
-     //   await topLevelLinks.clickLoginLink();
+        //   await topLevelLinks.clickLoginLink();
 
         // Login with valid credentials
-       // await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
+        // await login.loginUser('qr1w0.hnqmj@example.com', 'Password123');
 
         //Checking Shopping Cart is empty
 
-        const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
-        if (await cartqty !== '(0)') {
+        // const cartqty = await page.locator(topLevelLinks.shoppingCartQty).innerText()
+        const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
+
+        if (!cartEmpty) {
 
             await clearShoppingCart(page)
         }
 
         //click on Apparel category from the left menu
         await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Blue Jeans", "25");
-       // await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Casual Golf Belt", "25");
+        // await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Casual Golf Belt", "25");
 
         await topLevelLinks.clickShoppingCartLink();
 
@@ -196,35 +202,35 @@ test.describe('shopping Cart Tests', (page) => {
 
 
         //await page.locator(shoppingCartPage.checkoutButton).click();
-        await page.getByRole('button', { name : 'checkout'}).click();
+        await page.getByRole('button', { name: 'checkout' }).click();
 
         await page.locator(checkout.addressDropdown).selectOption({ index: 0 });
 
         //clicking continue button twice for moving to Shipping Address (no instore pickup)
 
-        
+
         await page.locator(checkout.billingAddressContinueButton).click();
         //await page.getByRole('input', { value : 'Continue' }).click();
         await page.locator(checkout.shippingAddressContinueButton).click();
-      
-       
+
+
         //Select shipping method
 
-         const shipMethodRadio = await checkout.selectShippingMethodByLabel(/Next Day Air/i);
-         await shipMethodRadio.click();
-         
+        const shipMethodRadio = await checkout.selectShippingMethodByLabel(/Next Day Air/i);
+        await shipMethodRadio.click();
+
 
         const shippingMethodDescription = await checkout.getShippingMethodDescription('Next Day Air (40.00)');
-        
+
         expect(checkout.shippingMethodDescriptionMaster['Next Day Air (40.00)']).toBe(shippingMethodDescription);
-        
+
 
         //click continue button in shipping Method screen
 
         await page.locator(checkout.shippingMethodContinueButton).click();
 
         //select Payment method
-        
+
         const paymentMethod = await checkout.paymentMethodElement("COD");
         await paymentMethod.check();
         await page.locator(checkout.paymentMethodContinueButton).click();
@@ -234,16 +240,41 @@ test.describe('shopping Cart Tests', (page) => {
 
         await page.locator(checkout.confirmContinueButton).click();
         await expect(page.locator('#confirm-order-please-wait')).toBeHidden();
+    })
+
+    test("Complete an order with Instore Pickup and Payment via Check / Money Order", async ({ page }) => {
+
+        const topLevelLinks = new TopLevelLinks(page);
+        const categoriesLeftMenu = new CategoriesLeftMenu(page);
+        const productdetailspage = new ProductDetailsPage(page);
+        const shoppingCartPage = new ShoppingCartPage(page);
+        const checkOutPages = new CheckOutPage(page);
+
+
+        await page.goto('https://demowebshop.tricentis.com/')
+
+        const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
+
+        if (!cartEmpty) {
+            await clearShoppingCart(page)
+        }
+
+        //click on Apparel category from the left menu
+        await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Blue Jeans", "25");
+        await topLevelLinks.clickShoppingCartLink()
+
+        await page.locator(shoppingCartPage.termsOfServiceChkBox).check();
+
+        await page.getByRole('button', {name: 'Checkout'}).click();
+        
+        //await checkOutPages.billingAddress.selectAddressByIndex(0);
+
+        await checkOutPages.performCheckOut(0,true, 'Credit Card');
 
         
-    })
 
+     });
 
-    test("Complete an order with Instore Pickup and Payment via Check / Money Order", async ({page}) => {
-        page.goto('https://demowebshop.tricentis.com/')
-        await page.waitForTimeout(5000)
-
-    })
 
 
 });

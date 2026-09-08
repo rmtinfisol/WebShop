@@ -19,4 +19,22 @@ export class BillingAddress {
 
         await this.addressDropDown.selectOption({ label: addressText });
     }
+
+    //select Address by index
+    async selectAddressByIndex(dropDownIndex){
+        //const currentSelectedValue = await this.addressDropDown.inputValue();
+         //console.log(currentSelectedValue);
+
+        const currentIndex = await this.addressDropDown.evaluate(el => el.selectedIndex)
+                 console.log(currentIndex);
+
+        if (currentIndex === 0){
+            console.log("Default Address is selected")
+        } else{
+            await this.addressDropDown.selectOption({index: dropDownIndex})
+        }
+
+        
+
+    }
 }

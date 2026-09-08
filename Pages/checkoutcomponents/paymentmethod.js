@@ -3,8 +3,8 @@ import { expect } from "@playwright/test";
 export class PaymentMethod {
     constructor(page){
         this.page = page;
-        this.root = page.locator('#opc-payment_method');
-        this.continueButton = page.getByRole('button', { name: 'Continue' })
+        this.root = this.page.locator('#opc-payment_method');
+        this.continueButton = this.root.getByRole('button', { name: 'Continue' })
     }
 
     async selectPaymentMethod(paymentMethod){

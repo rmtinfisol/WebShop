@@ -21,7 +21,10 @@ export class TopLevelLinks {
     }
 
     async clickShoppingCartLink() {
-        await this.page.click('//div[@class="header-links"]//a[@href="/cart"]');
+        //await this.page.click('//div[@class="header-links"]//a[@href="/cart"]');
+        const topLevelNavControl =  this.topNavLinks()
+        await topLevelNavControl.getByRole('link', {name: 'Shopping cart'}).click();
+
     }
 
     async clickWishlistLink() {
@@ -41,7 +44,7 @@ export class TopLevelLinks {
         return parseInt((await this.page.locator(this.shoppingCartQty).textContent()).match(/\d+/));
     }
 
-    async topNavLinks() {
+    topNavLinks() {
         return this.page.locator(this.topNavigationLinks);
     }
 
