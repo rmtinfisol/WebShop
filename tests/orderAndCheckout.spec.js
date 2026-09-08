@@ -34,7 +34,7 @@ async function addtoCart(page, categoriesLeftMenu, productdetailspage, productCa
 
     //Making sure product page is opened
     const headingText = await page.locator(productdetailspage.productName).innerText();
-    expect(headingText).toBe(itemtobuy);
+    await expect(headingText).toBe(itemtobuy);
 
     //Enter quantify and add to cart
 
@@ -178,9 +178,7 @@ test.describe('shopping Cart Tests', (page) => {
 
         await topLevelLinks.clickShoppingCartLink();
 
-        await page.locator(shoppingCartPage.termsOfServiceChkBox).setChecked(true);
-        //await page.getByRole('checkbox').setChecked(true);
-
+        await page.locator(shoppingCartPage.termsOfServiceChkBox).check();
 
         //await page.locator(shoppingCartPage.checkoutButton).click();
         await page.getByRole('button', { name: 'checkout' }).click();

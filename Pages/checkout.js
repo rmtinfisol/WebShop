@@ -92,8 +92,9 @@ export class CheckOut {
 
     async selectShippingMethodByLabel(labelText) {
 
-        const listItemwithLabelText = await this.page.locator('li').filter({ hasText: labelText });
-        return await listItemwithLabelText.getByText(labelText);
+        return this.page.getByRole('radio', { name: labelText })
+        //const listItemwithLabelText = await this.page.locator('li').filter({ hasText: labelText });
+        //return await listItemwithLabelText.getByText(labelText);
     }
 
 

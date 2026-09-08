@@ -62,7 +62,8 @@ export class ShoppingCartPage {
     async emptyShoppingCart() {
 
         await this.selectShoppingCartItemsforRemoval()
-        await this.page.locator(this.updateShoppingCartButton).click();
+        //await this.page.locator(this.updateShoppingCartButton).click();
+        await this.page.getByRole('button', { name: /update shopping cart/i}).click();
         await this.page.getByAltText('Tricentis Demo Web Shop').click()
     }
 
