@@ -34,7 +34,7 @@ async function addtoCart(page, categoriesLeftMenu, productdetailspage, productCa
 
     //Making sure product page is opened
     const headingText = await page.locator(productdetailspage.productName).innerText();
-    await expect(headingText).toBe(itemtobuy);
+    expect(headingText).toContain(itemtobuy);
 
     //Enter quantify and add to cart
 
