@@ -5,7 +5,8 @@ import { ShoppingCartPage } from '../Pages/shoppingcartpage';
 import { ProductDetailsPage } from '../Pages/productdetailspage';
 import { ProductLists } from '../Pages/productlists';
 import { CheckOutPage } from '../Pages/checkoutcomponents/checkoutpage';
-import { CommonLinks } from '../pages/commonlinks';
+import { CommonLinks } from '../Pages/commonlinks';
+
 
 test('Checkout with Cash on Delivery', async ({ emptyShoppingCart, page }) => {
 
@@ -86,11 +87,7 @@ test('Checkout with Cash on Delivery', async ({ emptyShoppingCart, page }) => {
             'Next Day Air',
             'Fiction',
             'Total: 120.00')
-        
-    
-
-
-
+   
     // Confirms that every item captured in the block is a valid, non-null string
     //expect(confirmOrderDetails).toEqual(expect.arrayOf(String));
 
