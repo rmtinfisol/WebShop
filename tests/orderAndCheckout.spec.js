@@ -102,12 +102,16 @@ test.describe('shopping Cart Tests', (page) => {
         // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
 
-
         const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
 
         if (!cartEmpty) {
 
-            await clearShoppingCart(page)
+            const isCartHasProduct = shoppingCartPage.isShoppingcartEmpty()
+
+            if (!isCartHasProduct) {
+                await clearShoppingCart(page)
+            }
+
         }
 
         //click on Apparel category from the left menu
@@ -206,19 +210,19 @@ test.describe('shopping Cart Tests', (page) => {
 
 
         //const shippingMethodDescription = await checkout.getShippingMethodDescription('Next Day Air (40.00)');
-        
+
         const shippingMethodLabel = await checkoutpage.shippingMethod.ShippingMethodDescription('Next Day Air')
         console.log(shippingMethodLabel)
 
 
-       // expect(shippingMethodLabel).toContainText(this.shippingMethodDescriptionMaster[shippingMethod])
+        // expect(shippingMethodLabel).toContainText(this.shippingMethodDescriptionMaster[shippingMethod])
         expect(checkoutpage.shippingMethod.shippingMethodDescriptionMaster['Next Day Air']).toBe(shippingMethodLabel);
 
 
         //click continue button in shipping Method screen
 
         //await page.locator(checkout.shippingMethodContinueButton).click();
-        await checkoutpage.shippingMethod.root.getByRole('button', {name: 'Continue'}).click()   
+        await checkoutpage.shippingMethod.root.getByRole('button', { name: 'Continue' }).click()
         //select Payment method
 
         const paymentMethod = await checkout.paymentMethodElement("COD");
@@ -243,10 +247,16 @@ test.describe('shopping Cart Tests', (page) => {
 
         await page.goto('https://demowebshop.tricentis.com/')
 
-        const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
+       const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
 
         if (!cartEmpty) {
-            await clearShoppingCart(page)
+
+            const isCartHasProduct = shoppingCartPage.isShoppingcartEmpty()
+
+            if (!isCartHasProduct) {
+                await clearShoppingCart(page)
+            }
+
         }
 
         //click on Apparel category from the left menu
