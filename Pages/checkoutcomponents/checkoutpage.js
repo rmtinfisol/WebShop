@@ -47,7 +47,7 @@ export class CheckOutPage {
                 await expect(this.paymentInformation.cashOnDeliveryPaymentInformation).toHaveText(/You will pay by COD/i);
                 break;
             case 'Check / Money Order':
-                await this.page.getByRole('radio', { name: /Check \/ Money Order/i }).check();
+                await this.page.getByRole('radio', { name: paymentMethod }).check();
                 await this.page.getByRole('button', { name: 'Continue' }).click();
                 await expect(this.paymentInformation.screenTitle).toBeVisible();
                 await expect(this.paymentInformation.checkMailOrderPaymentInformation).toBeVisible();
