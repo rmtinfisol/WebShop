@@ -30,7 +30,7 @@ async function addtoCart(page, categoriesLeftMenu, productdetailspage, productCa
     await categoriesLeftMenu.selectCategory(productCategory);
 
     //Click on the link for the item to buy
-    await page.getByText(itemtobuy).click();
+    await page.getByRole('link', { name: itemtobuy, exact: true }).click();
 
     //Making sure product page is opened
     const headingText = await page.locator(productdetailspage.productName).innerText();
@@ -53,7 +53,7 @@ async function paymentCreditCard(page, checkout) {
     await page.locator(checkout.expireYear).select('2024')
     await page.locator(checkout.cardCode).fill('123')
 
-    await page.locatpr(checkout.paymentInformationContinueButton).click()
+    await page.locator(checkout.paymentInformationContinueButton).click()
 
 }
 
@@ -70,7 +70,7 @@ test.describe('shopping Cart Tests', (page) => {
 
         // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
-       
+
 
         const isUserLoggedIn = await topLevelLinks.isUserLoggedIn()
         expect(isUserLoggedIn).toBeTruthy();
@@ -94,7 +94,7 @@ test.describe('shopping Cart Tests', (page) => {
 
         const topLevelLinks = new TopLevelLinks(page);
         const categoriesLeftMenu = new CategoriesLeftMenu(page);
-        const login = new Login(page);
+        //const login = new Login(page);
         const productdetailspage = new ProductDetailsPage(page);
         const shoppingCartPage = new ShoppingCartPage(page);
 
@@ -156,24 +156,30 @@ test.describe('shopping Cart Tests', (page) => {
 
         const topLevelLinks = new TopLevelLinks(page);
         const categoriesLeftMenu = new CategoriesLeftMenu(page);
-        const login = new Login(page);
+        //const login = new Login(page);
         const productdetailspage = new ProductDetailsPage(page);
         const shoppingCartPage = new ShoppingCartPage(page);
         const checkout = new CheckOut(page);
+        const checkoutpage = new CheckOutPage(page);
 
         // Navigate to the homepage and click on the login link
         await page.goto('https://demowebshop.tricentis.com/');
 
-  
+
         const cartEmpty = await topLevelLinks.isShoppingcartEmpty()
 
         if (!cartEmpty) {
 
-            await clearShoppingCart(page)
+            const isCartHasProduct = shoppingCartPage.isShoppingcartEmpty()
+
+            if (!isCartHasProduct) {
+                await clearShoppingCart(page)
+            }
+
         }
 
         //click on Apparel category from the left menu
-        await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Blue Jeans", "25");
+        await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Blue Jeans", "1");
         // await addtoCart(page, categoriesLeftMenu, productdetailspage, categoriesLeftMenu.AvailableCategories.APPAREL_AND_SHOES, "Casual Golf Belt", "25");
 
         await topLevelLinks.clickShoppingCartLink();
@@ -199,15 +205,20 @@ test.describe('shopping Cart Tests', (page) => {
         await shipMethodRadio.click();
 
 
-        const shippingMethodDescription = await checkout.getShippingMethodDescription('Next Day Air (40.00)');
+        //const shippingMethodDescription = await checkout.getShippingMethodDescription('Next Day Air (40.00)');
+        
+        const shippingMethodLabel = await checkoutpage.shippingMethod.ShippingMethodDescription('Next Day Air')
+        console.log(shippingMethodLabel)
 
-        expect(checkout.shippingMethodDescriptionMaster['Next Day Air (40.00)']).toBe(shippingMethodDescription);
+
+       // expect(shippingMethodLabel).toContainText(this.shippingMethodDescriptionMaster[shippingMethod])
+        expect(checkoutpage.shippingMethod.shippingMethodDescriptionMaster['Next Day Air']).toBe(shippingMethodLabel);
 
 
         //click continue button in shipping Method screen
 
-        await page.locator(checkout.shippingMethodContinueButton).click();
-
+        //await page.locator(checkout.shippingMethodContinueButton).click();
+        await checkoutpage.shippingMethod.root.getByRole('button', {name: 'Continue'}).click()   
         //select Payment method
 
         const paymentMethod = await checkout.paymentMethodElement("COD");
@@ -244,15 +255,15 @@ test.describe('shopping Cart Tests', (page) => {
 
         await page.locator(shoppingCartPage.termsOfServiceChkBox).check();
 
-        await page.getByRole('button', {name: 'Checkout'}).click();
-        
+        await page.getByRole('button', { name: 'Checkout' }).click();
+
         //await checkOutPages.billingAddress.selectAddressByIndex(0);
 
-        await checkOutPages.performCheckOut(0,true, 'Check / Money Order');
+        await checkOutPages.performCheckOut(0, true, 'Check / Money Order');
 
-        
 
-     });
+
+    });
 
 
 

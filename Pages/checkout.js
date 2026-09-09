@@ -68,7 +68,7 @@ export class CheckOut {
     }
     //Selecting shipping method by radiobutton label
 
-    async getShippingMethodDescription(methodName) {
+  async getShippingMethodDescription(methodName) {
         const listItems = this.page
             .locator('li')
             .filter({ has: this.page.getByLabel(methodName, { exact: true }) })
@@ -87,7 +87,6 @@ export class CheckOut {
 
 
     }
-
 
 
     async selectShippingMethodByLabel(labelText) {
